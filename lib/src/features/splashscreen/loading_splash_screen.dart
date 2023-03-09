@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:triviago/src/global/ui/ui_barrel.dart';
 import 'package:triviago/src/features/home/controllers/message_controller.dart';
-import 'package:triviago/src/features/home/models/trivago.dart';
+import 'package:triviago/src/features/home/models/triviago.dart';
 import 'package:triviago/src/features/registration/controllers/registration_controller.dart';
 import 'package:triviago/src/features/home/views/home_page.dart';
 import 'package:triviago/src/features/registration/views/login_screen.dart';
