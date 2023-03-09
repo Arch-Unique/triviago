@@ -69,24 +69,26 @@ class CustomTextField extends StatelessWidget {
                 //   setState(() {
                 //     vald = FPLValidator(s).valPassword();
                 //   });
-                // } else if (hint == "Username") {
-                //   if (s.contains(RegExp(r'[^\w.]'))) {
-                //     a = 0;
-                //   } else if (s.length >= 3) {
-                //     a = 2;
-                //     if (s != CurrentUser().rawUsername) {
-                //       setState(() {
-                //         a = 1;
-                //       });
+                // } else
 
-                //       final b = await HttpService.checkUsername(s);
-                //       a = b ? 2 : 0;
-                //     }
-                //   } else if (s.length > 1) {
-                //     a = 1;
-                //   }
-                //   setState(() {});
-                // }
+                if (hint == "Username") {
+                  if (s.contains(RegExp(r'[^\w.]'))) {
+                    a = 0;
+                  } else if (s.length >= 3) {
+                    a = 2;
+                    // if (s != CurrentUser().rawUsername) {
+                    //   setState(() {
+                    //     a = 1;
+                    //   });
+
+                    //   final b = await HttpService.checkUsername(s);
+                    //   a = b ? 2 : 0;
+                    // }
+                  } else if (s.length > 1) {
+                    a = 1;
+                  }
+                  setState(() {});
+                }
               },
               keyboardType: varl.textType,
               textInputAction: tia,
@@ -101,6 +103,8 @@ class CustomTextField extends StatelessWidget {
 
               validator: (value) {
                 setState(() {
+                  print(a);
+                  print(value);
                   vald = oldPass == null
                       ? Validators.validate(varl, value)
                       : Validators.confirmPasswordValidator(value, oldPass!);

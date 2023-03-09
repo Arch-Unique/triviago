@@ -644,7 +644,7 @@ class MyLogo extends StatelessWidget {
       child: Hero(
         tag: "mylogo",
         child: AppText.bold("triviago",
-            fontSize: 24, color: AppColors.primaryColor),
+            fontSize: 32, color: AppColors.primaryColor),
       ),
     );
   }

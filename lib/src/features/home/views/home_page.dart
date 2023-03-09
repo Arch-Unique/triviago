@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLastPage = false;
   bool isPressed = false;
   int curpg = 1;
-  Color col = AppColors.primaryColor[900]!;
+  Color col = AppColors.primaryColor;
 
   final controller = Get.find<MessageController>();
 
@@ -48,36 +48,40 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        MyLogo(),
-        Ui.boxHeight(24),
-        Obx(() {
-          return Expanded(
-            child: Ui.padding(
-                child: ListView.builder(
-              controller: controller.listScrollController,
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              itemBuilder: (ctx, i) {
-                final m = controller.getMsg(i);
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24.0),
-                      child: AppText.medium(controller.msgKeys[i].toUpperCase(),
-                          fontSize: 12, color: AppColors.grey),
-                    ),
-                    ...List.generate(
-                        m.length, (index) => ChatBoxWidget(m[index]))
-                  ],
-                );
-              },
-              itemCount: controller.msgs.length,
-            )),
-          );
-        }),
-        buildTyper(),
-      ]),
+      body: SafeArea(
+        child: Column(children: [
+          MyLogo(),
+          Ui.boxHeight(24),
+          Obx(() {
+            return Expanded(
+              child: Ui.padding(
+                  child: ListView.builder(
+                controller: controller.listScrollController,
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                itemBuilder: (ctx, i) {
+                  final m = controller.getMsg(i);
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                        child: AppText.medium(
+                            controller.msgKeys[i].toUpperCase(),
+                            fontSize: 12,
+                            color: AppColors.grey),
+                      ),
+                      ...List.generate(
+                          m.length, (index) => ChatBoxWidget(m[index]))
+                    ],
+                  );
+                },
+                itemCount: controller.msgs.length,
+              )),
+            );
+          }),
+          buildTyper(),
+        ]),
+      ),
     );
   }
 

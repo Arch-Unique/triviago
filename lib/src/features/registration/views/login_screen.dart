@@ -24,9 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Ui.padding(
             child: Form(
-              key: controller.formkey,
-              child: Obx(() {
-                return Column(children: [
+                key: controller.formkey,
+                child: Column(children: [
                   MyLogo(),
                   Ui.boxHeight(24),
                   AspectRatio(
@@ -48,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Ui.boxHeight(24),
                   CustomTextField("Username", "", controller.textControllers[0],
                       isLabel: false, varl: FPL.text),
+                  Ui.boxHeight(24),
                   CustomTextField(
                       "Phone Number", "", controller.textControllers[1],
                       isLabel: false, varl: FPL.phone),
@@ -55,9 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   FilledButton.white(() async {
                     await controller.login();
                   }, "SUBMIT"),
-                ]);
-              }),
-            ),
+                ])),
           ),
         ),
       ),

@@ -112,7 +112,7 @@ class AppText extends StatelessWidget {
       AppText(
         text,
         fontSize: fontSize,
-        weight: FontWeight.w300,
+        weight: FontWeight.w500,
         decoration: decoration,
         alignment: alignment,
         color: color,

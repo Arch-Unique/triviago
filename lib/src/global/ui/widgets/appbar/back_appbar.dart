@@ -9,8 +9,9 @@ AppBar backAppBar({String? title, Color color = AppColors.primaryColor}) {
       backgroundColor: Colors.transparent,
       title: title == null
           ? null
-          : AppText.bold(title, fontSize: 24, color: color),
+          : AppText.bold(title, fontSize: 32, color: color),
       elevation: 0,
+      centerTitle: true,
       leading: Builder(builder: (context) {
         return IconButton(
           onPressed: () {
