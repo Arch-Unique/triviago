@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:triviago/src/features/home/controllers/message_controller.dart';
+import 'package:triviago/src/features/registration/views/login_screen.dart';
+import 'package:triviago/src/global/services/http_service.dart';
 import 'package:triviago/src/global/ui/widgets/others/containers.dart';
 import 'package:triviago/src/src_barrel.dart';
 
@@ -50,35 +52,57 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Column(children: [
-          MyLogo(),
-          Ui.boxHeight(24),
-          Obx(() {
-            return Expanded(
-              child: Ui.padding(
-                  child: ListView.builder(
-                controller: controller.listScrollController,
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                itemBuilder: (ctx, i) {
-                  final m = controller.getMsg(i);
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24.0),
-                        child: AppText.medium(
-                            controller.msgKeys[i].toUpperCase(),
-                            fontSize: 12,
-                            color: AppColors.grey),
-                      ),
-                      ...List.generate(
-                          m.length, (index) => ChatBoxWidget(m[index]))
-                    ],
-                  );
-                },
-                itemCount: controller.msgs.length,
-              )),
-            );
-          }),
+          Row(
+            children: [
+              Ui.boxWidth(8),
+              MyLogo(),
+              const Spacer(),
+              IconButton(
+                  onPressed: () {
+                    Ui.showBottomSheet(
+                        "Logout",
+                        "Are you sure you want to logout ?",
+                        IconButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            icon: Icon(Icons.close)), yesBtn: () async {
+                      await HttpService.logout();
+                      Get.offAll(LoginScreen());
+                    });
+                  },
+                  icon: Icon(
+                    IconlyBold.logout,
+                    color: AppColors.primaryColor,
+                  ))
+            ],
+          ),
+          Expanded(
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: ListView.builder(
+                  controller: controller.listScrollController,
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  itemBuilder: (ctx, i) {
+                    final m = controller.getMsg(i);
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24.0),
+                          child: AppText.medium(
+                              controller.msgKeys[i].toUpperCase(),
+                              fontSize: 12,
+                              color: AppColors.grey),
+                        ),
+                        ...List.generate(
+                            m.length, (index) => ChatBoxWidget(m[index]))
+                      ],
+                    );
+                  },
+                  itemCount: controller.msgs.length,
+                )),
+          ),
           buildTyper(),
         ]),
       ),
@@ -87,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container buildTyper() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(8),
       color: col,
       child: SafeArea(
         child: SizedBox(
@@ -142,8 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 },
                 child: Container(
-                    height: 44,
-                    width: 44,
+                    height: 40,
+                    width: 40,
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(16),

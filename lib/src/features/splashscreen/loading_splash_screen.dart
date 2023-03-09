@@ -38,7 +38,7 @@ class _LoadingSplashScreenState extends State<LoadingSplashScreen> {
         } else {
           hscreen = LoginScreen();
         }
-        Get.to(hscreen);
+        Get.offAll(hscreen);
       }
     });
   }

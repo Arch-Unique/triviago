@@ -72,9 +72,7 @@ class CustomTextField extends StatelessWidget {
                 // } else
 
                 if (hint == "Username") {
-                  if (s.contains(RegExp(r'[^\w.]'))) {
-                    a = 0;
-                  } else if (s.length >= 3) {
+                  if (s.length >= 3) {
                     a = 2;
                     // if (s != CurrentUser().rawUsername) {
                     //   setState(() {

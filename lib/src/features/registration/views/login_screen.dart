@@ -16,6 +16,27 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final controller = Get.find<RegistrationController>();
+  final pgController = PageController(viewportFraction: 0.35);
+  double _currentPage = 0.0;
+
+  void userImageListener() {
+    setState(() {
+      _currentPage = pgController.page!;
+    });
+  }
+
+  @override
+  void initState() {
+    pgController.addListener(userImageListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    pgController.removeListener(userImageListener);
+    pgController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +52,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   AspectRatio(
                     aspectRatio: 16 / 9,
                     child: PageView.builder(
+                      controller: pgController,
+                      clipBehavior: Clip.none,
                       itemBuilder: (_, i) {
-                        return SvgPicture.asset(
-                          Assets.usersImages[i],
-                          height: 48,
-                          width: 48,
+                        final r = _currentPage - i;
+                        final v = (-(r * r) + 1.5).clamp(0.0, 1.5);
+                        final o = v.clamp(0.5, 1.0);
+                        print("$_currentPage $r $v $o");
+                        return Transform.scale(
+                          // alignment: Alignment.bottomCenter,
+                          scale: v,
+                          child: Opacity(
+                            opacity: o,
+                            child: SvgPicture.asset(
+                              Assets.usersImages[i],
+                              height: 48,
+                              width: 48,
+                            ),
+                          ),
                         );
                       },
                       onPageChanged: (i) {

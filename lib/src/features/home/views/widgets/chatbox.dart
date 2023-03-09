@@ -9,7 +9,8 @@ import '../../models/message.dart';
 
 class ChatBoxWidget extends StatelessWidget {
   final Messages msg;
-  ChatBoxWidget(this.msg, {super.key});
+  final bool lastMsgBySamePerson;
+  ChatBoxWidget(this.msg, {this.lastMsgBySamePerson = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +26,19 @@ class ChatBoxWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppText.medium(msg.owner,
-                  fontSize: 17, color: AppColors.primaryColor),
+              if (msg.owner != "Me")
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText.medium(msg.owner, fontSize: 14, color: msg.color),
+                    Ui.boxWidth(12),
+                    AppText.thin(DateFormat("hh:mm").format(msg.time),
+                        color: AppColors.white40, fontSize: 10),
+                  ],
+                ),
               AppText.thin(msg.desc!, fontSize: 14),
-              Ui.align(
-                align: Alignment.centerRight,
-                child: AppText.thin(DateFormat("d/M/y").format(msg.time),
-                    fontSize: 10),
-              ),
+              if (!lastMsgBySamePerson) Ui.boxHeight(8)
             ],
           ),
         ),

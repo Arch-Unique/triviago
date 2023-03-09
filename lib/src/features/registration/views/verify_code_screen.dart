@@ -37,10 +37,11 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen>
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Ui.boxHeight(8),
               Align(
-                alignment: Alignment.centerLeft,
-                child: AppText.medium("Account \nVerification", fontSize: 28),
+                alignment: Alignment.center,
+                child: AppText.medium("Account \nVerification",
+                    fontSize: 28, alignment: TextAlign.center),
               ),
-              Ui.boxHeight(96),
+              Ui.boxHeight(56),
               OTPTextField(
                 length: 4,
                 controller: controller.otpController,
@@ -81,45 +82,49 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen>
                     isVerifying = false;
                   });
                   // if (c) {
-                  Get.to(widget.nextScreen ?? HomeScreen());
+                  Get.offAll(widget.nextScreen ?? HomeScreen());
                   // }
                 },
               ),
-              Ui.boxHeight(96),
-              AppText.thin(
-                  "Enter the 4 digit code that was sent to your email"),
+              Ui.boxHeight(48),
+              AppText.thin("Enter the 4 digit code that was sent to your email",
+                  alignment: TextAlign.center),
               Ui.boxHeight(32),
               isVerifying ? buildProgress() : const SizedBox(),
-              Ui.boxHeight(96),
-              GestureDetector(
-                onTap: () async {
-                  controller.otpController.clear();
-                  // final c = await HttpService.sendotp(widget.email);
-                  setState(() {
-                    isVerifying = false;
-                  });
-                  // if (c) {
-                  //   Get.snackbar(
-                  //     "Success",
-                  //     "OTP sent to your email",
-                  //     shouldIconPulse: true,
-                  //     icon: const Icon(
-                  //       Icons.check_circle_rounded,
-                  //       color: Places.primaryColor,
-                  //     ),
-                  //     backgroundColor: Colors.white,
-                  //     margin: const EdgeInsets.all(24),
-                  //     duration: const Duration(seconds: 5),
-                  //   );
-                  // }
-                },
-                child: const Text(
-                  "Didn't receive the code ? Resend OTP",
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w300,
-                      decoration: TextDecoration.underline,
-                      color: Colors.white),
+              Ui.boxHeight(48),
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                child: InkWell(
+                  onTap: () async {
+                    controller.otpController.clear();
+                    // final c = await HttpService.sendotp(widget.email);
+                    setState(() {
+                      isVerifying = false;
+                    });
+                    // if (c) {
+                    //   Get.snackbar(
+                    //     "Success",
+                    //     "OTP sent to your email",
+                    //     shouldIconPulse: true,
+                    //     icon: const Icon(
+                    //       Icons.check_circle_rounded,
+                    //       color: Places.primaryColor,
+                    //     ),
+                    //     backgroundColor: Colors.white,
+                    //     margin: const EdgeInsets.all(24),
+                    //     duration: const Duration(seconds: 5),
+                    //   );
+                    // }
+                  },
+                  child: Text(
+                    "Didn't receive the code ? \nResend OTP",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w300,
+                        decoration: TextDecoration.underline,
+                        color: Colors.white),
+                  ),
                 ),
               ),
             ]),

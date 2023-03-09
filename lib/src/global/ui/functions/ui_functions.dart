@@ -96,7 +96,10 @@ abstract class Ui {
                   AppText.medium(title, fontSize: 24),
                   const Spacer(),
                   IconButton(
-                    icon: Icon(IconlyLight.delete),
+                    icon: Icon(
+                      Icons.close,
+                      color: AppColors.white,
+                    ),
                     onPressed: () {
                       Get.back();
                     },
@@ -111,7 +114,7 @@ abstract class Ui {
                   Expanded(
                       child: FilledButton.outline(() {
                     Get.back();
-                  }, "No", color: AppColors.secondaryColor)),
+                  }, "No", color: AppColors.primaryColor[700]!)),
                   Ui.boxWidth(16),
                   Expanded(
                       child: FilledButton(
@@ -126,7 +129,7 @@ abstract class Ui {
             ],
           ),
         ),
-        backgroundColor: AppColors.secondaryColor,
+        backgroundColor: AppColors.primaryColor[700],
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40), topRight: Radius.circular(40))));
