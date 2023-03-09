@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:triviago/src/global/services/mypref.dart';
 import 'package:triviago/src/global/ui/widgets/others/containers.dart';
 
 import '../../../../global/ui/ui_barrel.dart';
@@ -26,7 +27,7 @@ class ChatBoxWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (msg.owner != "Me")
+              if (msg.owner != MyPrefs.localUser().username)
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,

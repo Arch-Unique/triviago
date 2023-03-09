@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
+import 'package:triviago/src/global/services/mypref.dart';
 import '../models/message.dart';
 
 class MessageController extends GetxController {
@@ -13,7 +14,7 @@ class MessageController extends GetxController {
   RxList<Messages> allMsg = List.generate(
     10,
     (index) => Messages(DateTime.now().subtract(Duration(hours: 3 * index)),
-        owner: index.isEven ? "Me" : "MikeMazowski",
+        owner: index.isEven ? MyPrefs.localUser().username : "MikeMazowski",
         color: userColors[Random().nextInt(userColors.length)],
         desc:
             "Hello guys, we have discussed about post-corona vacation plan and our decision is to go to Bali. "),

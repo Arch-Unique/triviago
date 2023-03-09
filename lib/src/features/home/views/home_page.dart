@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:triviago/src/features/home/controllers/message_controller.dart';
+import 'package:triviago/src/features/home/models/triviago.dart';
 import 'package:triviago/src/features/registration/views/login_screen.dart';
 import 'package:triviago/src/global/services/http_service.dart';
 import 'package:triviago/src/global/ui/widgets/others/containers.dart';
@@ -28,10 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Color col = AppColors.primaryColor;
 
   final controller = Get.find<MessageController>();
+  final gameController = Get.find<TriviaGo>();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      gameController.startGame();
       final position = controller.listScrollController.position.maxScrollExtent;
       controller.listScrollController.jumpTo(position);
     });
