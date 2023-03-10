@@ -22,7 +22,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   bool isLastPage = false;
   bool isPressed = false;
   int curpg = 1;
@@ -30,6 +31,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final controller = Get.find<MessageController>();
   final gameController = Get.find<TriviaGo>();
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 200),
+    vsync: this,
+  )..addListener(() {
+      setState(() {});
+    });
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -53,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: buildTyper(),
       body: SafeArea(
         child: Column(children: [
           Row(
@@ -80,39 +95,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   ))
             ],
           ),
-          Expanded(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: ListView.builder(
-                  controller: controller.listScrollController,
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  itemBuilder: (ctx, i) {
-                    final m = controller.getMsg(i);
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 24.0),
-                          child: AppText.medium(
-                              controller.msgKeys[i].toUpperCase(),
-                              fontSize: 12,
-                              color: AppColors.grey),
-                        ),
-                        ...List.generate(
-                            m.length, (index) => ChatBoxWidget(m[index]))
-                      ],
-                    );
-                  },
-                  itemCount: controller.msgs.length,
-                )),
-          ),
-          buildTyper(),
+          Obx(() {
+            return Expanded(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: ListView.builder(
+                    controller: controller.listScrollController,
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    itemBuilder: (ctx, i) {
+                      final m = controller.getMsg(i);
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 24.0),
+                            child: AppText.medium(
+                                controller.msgKeys[i].toUpperCase(),
+                                fontSize: 12,
+                                color: AppColors.grey),
+                          ),
+                          ...List.generate(
+                              m.length, (index) => ChatBoxWidget(m[index]))
+                        ],
+                      );
+                    },
+                    itemCount: controller.msgs.length,
+                  )),
+            );
+          }),
+          Ui.boxHeight(64)
+          // buildTyper(),
         ]),
       ),
     );
   }
 
   Container buildTyper() {
+    final animationValue = 1 - _controller.value;
+    final scale = 1 + 0.2 * _controller.value;
+    final opacity = animationValue;
     return Container(
       padding: const EdgeInsets.all(8),
       color: col,
@@ -148,39 +169,38 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 8,
               ),
               GestureDetector(
-                onTap: () async {
+                onTapDown: (_) async {
                   setState(() {
                     isPressed = true;
                   });
                   controller.addNewMsg();
 
                   // await getComments();
-                  if (controller.listScrollController.hasClients) {
-                    final position = controller
-                            .listScrollController.position.maxScrollExtent +
-                        100;
-                    controller.listScrollController.animateTo(position,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.fastOutSlowIn);
-                  }
+
                   controller.textEditingController.clear();
                   setState(() {
                     isPressed = false;
                   });
                 },
-                child: Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: isPressed
-                        ? const CircularProgress(24)
-                        : Icon(
-                            IconlyLight.send,
-                            color: col,
-                          )),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: isPressed
+                            ? const CircularProgress(24)
+                            : Icon(
+                                IconlyLight.send,
+                                color: col,
+                              )),
+                  ),
+                ),
               ),
             ],
           ),

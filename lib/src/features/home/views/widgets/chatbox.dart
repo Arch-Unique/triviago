@@ -15,14 +15,15 @@ class ChatBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = Ui.width(context) - 48;
+    final c = Ui.width(context);
     return Row(
       mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment:
-          msg.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: msg.owner == MyPrefs.localUser().username
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: c - (c / 3)),
+          constraints: BoxConstraints(maxWidth: c - (c / 4)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,6 +31,7 @@ class ChatBoxWidget extends StatelessWidget {
               if (msg.owner != MyPrefs.localUser().username)
                 Row(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppText.medium(msg.owner, fontSize: 14, color: msg.color),

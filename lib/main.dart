@@ -36,10 +36,13 @@ class MyApp extends StatelessWidget {
           Locale('en', 'GB'), // English
         ],
         theme: ThemeData(
-          fontFamily: Assets.appFontFamily,
-          primarySwatch: AppColors.primaryColor,
-          scaffoldBackgroundColor: AppColors.black,
-        ),
+            fontFamily: Assets.appFontFamily,
+            primarySwatch: AppColors.primaryColor,
+            scaffoldBackgroundColor: AppColors.black,
+            textSelectionTheme: TextSelectionThemeData(
+                cursorColor: AppColors.white,
+                selectionColor: AppColors.white,
+                selectionHandleColor: AppColors.white)),
         home: LoadingSplashScreen());
   }
 }

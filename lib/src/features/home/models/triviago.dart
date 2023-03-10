@@ -17,29 +17,18 @@ class TriviaGo extends GetxController {
   static const String ranking = "/ranking"; //my ranking
   static const String point = "/point"; //my total point
   static const String leaderboard = "/leaderboard"; //leaderboard top10
-  // static const String ranking = "/ranking";
-  // static const String ranking = "/ranking";
-  // static const String ranking = "/ranking";
-  // static const String ranking = "/ranking";
-  // static const String ranking = "/ranking";
-
   final controller = Get.find<MessageController>();
   final questions = allQuestions.map((e) => QuizModel.fromMAP(e)).toList();
   RxInt questionNo = 0.obs;
   RxInt messageIndex = 0.obs;
   RxInt prevMessageIndex = 0.obs;
   Map<String, int> leaderboardTable = {};
+  Completer ansCompl = Completer();
+  Timer? eqr;
 
   _sendMessage(String msg) {
-    controller.allMsg.add(Messages(DateTime.now(),
+    controller.addNewMsgTriv(Messages(DateTime.now(),
         owner: triviago.username, color: AppColors.primaryColor, desc: msg));
-    if (controller.listScrollController.hasClients) {
-      final position =
-          controller.listScrollController.position.maxScrollExtent + 100;
-      controller.listScrollController.animateTo(position,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.fastOutSlowIn);
-    }
 
     prevMessageIndex.value = messageIndex.value;
     messageIndex.value = controller.allMsg.length - 1;
@@ -52,30 +41,66 @@ class TriviaGo extends GetxController {
     return "$question\n\n$options";
   }
 
+  onInit() {
+    controller.allMsg.listen((p0) {
+      if (!ansCompl.isCompleted) {
+        handleAnswer(p0.last);
+      }
+    });
+    super.onInit();
+  }
+
   void startGame() {
-    Timer.periodic(Duration(seconds: 60), (t) {
-      final c = generateQuestion();
-      _sendMessage(c);
-      Timer.periodic(Duration(seconds: 40), (timer) {
+    final c = generateQuestion();
+    _sendMessage(c);
+    ansCompl = Completer();
+    endQuizAndReset();
+  }
+
+  void endQuizAndReset() {
+    eqr = Timer(Duration(seconds: 40), () {
+      if (ansCompl.isCompleted) {
+        resetGame();
+        eqr?.cancel();
+      } else {
         timeElapsed();
-        questionNo.value += 1;
-        Future.delayed(Duration(seconds: 5), () {
-          showLeaderboard();
-        });
+        resetGame();
+      }
+    });
+  }
+
+  void resetGame() {
+    questionNo.value += 1;
+    Future.delayed(Duration(seconds: 5), () {
+      showLeaderboard();
+      Future.delayed(Duration(seconds: 5), () {
+        startGame();
       });
     });
   }
 
+  handleAnswer(Messages pl) {
+    if (pl.desc!.toUpperCase() == questions[questionNo.value].answer) {
+      _checkAndScoreUser(pl.owner);
+      _sendMessage("Congrats to ${pl.owner}, you got 5 points !!!");
+      ansCompl.complete();
+      eqr?.cancel();
+      resetGame();
+    }
+  }
+
   void timeElapsed() {
-    List<Messages> f = controller.allMsg
-        .sublist(prevMessageIndex.value, messageIndex.value + 1);
+    List<Messages> f =
+        controller.allMsg.sublist(messageIndex.value, controller.allMsg.length);
     for (var i = 0; i < f.length; i++) {
       if (f[i].desc!.toUpperCase() == questions[questionNo.value].answer) {
         _checkAndScoreUser(f[i].owner);
         _sendMessage("Congrats to ${f[i].owner}, you got 5 points !!!");
+        ansCompl.complete();
         return;
       }
     }
+    ansCompl.complete();
     _sendMessage("Unfortunately, No winner");
   }
 

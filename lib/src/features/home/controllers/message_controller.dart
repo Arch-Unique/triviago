@@ -41,9 +41,29 @@ class MessageController extends GetxController {
   }
 
   addNewMsg() {
-    if (textEditingController.value.text.isEmpty) return;
-    allMsg
-        .add(Messages(DateTime.now(), desc: textEditingController.value.text));
+    if (textEditingController.value.text.trim().isEmpty) return;
+    allMsg.add(Messages(DateTime.now(),
+        desc: textEditingController.value.text,
+        owner: MyPrefs.localUser().username));
+    if (listScrollController.hasClients) {
+      final position = listScrollController.position.maxScrollExtent +
+          listScrollController.position.extentAfter +
+          100;
+      listScrollController.animateTo(position,
+          duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
+  }
+
+  addNewMsgTriv(Messages l) {
+    if (l.desc?.trim().isEmpty ?? true) return;
+    allMsg.add(l);
+    if (listScrollController.hasClients) {
+      final position = listScrollController.position.maxScrollExtent +
+          listScrollController.position.extentAfter +
+          100;
+      listScrollController.animateTo(position,
+          duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
   }
 
   _sortInboxByTime() {
